@@ -14,6 +14,15 @@ const Avoir = sequelize.define('Avoir', {
         references: { model: Quete, key: 'Id_quete' },
         primaryKey: true,
     },
+    currentProgress: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0, // Starts at 0
+    },
+    goal: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }
 }, { timestamps: false });
 
 module.exports = Avoir;
