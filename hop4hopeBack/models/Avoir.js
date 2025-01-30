@@ -17,11 +17,16 @@ const Avoir = sequelize.define('Avoir', {
     currentProgress: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0, // Starts at 0
+        defaultValue: 0,
     },
     goal: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    rewardClaimed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false, // Initially, reward is not claimed
     }
 }, { timestamps: false });
 
