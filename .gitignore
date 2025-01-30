@@ -1,0 +1,51 @@
+# Ignore Node.js modules
+node_modules/
+npm-debug.log*
+yarn-error.log
+package-lock.json
+
+# Ignore environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore log files
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore compiled files
+dist/
+build/
+.cache/
+
+# Ignore database files
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore backend-specific files
+hop4hopeBack/node_modules/
+hop4hopeBack/package-lock.json
+hop4hopeBack/.env
+hop4hopeBack/logs/
+
+# Ignore frontend-specific files
+hop4hopeFront/node_modules/
+hop4hopeFront/.next/
+hop4hopeFront/.nuxt/
+hop4hopeFront/.cache/
+hop4hopeFront/build/
+hop4hopeFront/dist/
+hop4hopeFront/.env
+hop4hopeFront/package-lock.json
