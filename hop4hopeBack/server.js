@@ -4,7 +4,8 @@ const { connectDB } = require('./config/database');
 const personnageRoutes = require('./routes/personnageRoutes');
 const animationRoutes = require('./routes/animationRoutes');
 const userRoutes = require('./routes/userRoutes');
-const questRoutes = require('./routes/questRoutes'); // New quest routes
+const questRoutes = require('./routes/questRoutes');
+const shopRoutes = require('./routes/shopRoutes'); // ✅ Include shop routes
 
 const app = express();
 app.use(express.json());
@@ -14,7 +15,8 @@ app.use(cors());
 app.use('/users', userRoutes);
 app.use('/personnages', personnageRoutes);
 app.use('/animations', animationRoutes);
-app.use('/quests', questRoutes); // Registering quest routes
+app.use('/quests', questRoutes);
+app.use('/shop', shopRoutes); // ✅ Register shop routes
 
 // Start server
 const PORT = 5000;
