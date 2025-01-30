@@ -23,7 +23,8 @@ const updateQuestProgress = async (req, res) => {
                 Id_utilisateur: userId,
                 Id_quete: questId,
                 currentProgress: 0,
-                goal: quest.defaultGoal // Use default goal from Quete table
+                goal: quest.goal, // Fix: use goal from Avoir instead of defaultGoal
+                rewardClaimed: false
             });
         }
 
@@ -34,14 +35,10 @@ const updateQuestProgress = async (req, res) => {
         if (questProgress.currentProgress >= questProgress.goal) {
             questProgress.currentProgress = questProgress.goal; // Cap progress at goal
 
-            // Update user points
-            const user = await Utilisateur.findByPk(userId);
-            user.points += quest.points;
-            await user.save();
-
             res.json({
                 message: "Quest completed!",
-                newPoints: user.points,
+                currentProgress: questProgress.currentProgress,
+                goal: questProgress.goal,
                 questStatus: "Completed"
             });
         } else {
@@ -110,4 +107,4 @@ const claimQuestReward = async (req, res) => {
     }
 };
 
-module.exports = { updateQuestProgress };
+module.exports = { updateQuestProgress, claimQuestReward };
