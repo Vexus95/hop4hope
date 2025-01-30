@@ -3,8 +3,8 @@ const cors = require('cors');
 const { connectDB } = require('./config/database');
 const personnageRoutes = require('./routes/personnageRoutes');
 const animationRoutes = require('./routes/animationRoutes');
-const userRoutes = require('./routes/userRoutes');
-const questRoutes = require('./routes/questRoutes');
+const userRoutes = require('./routes/utilisateurRoutes');
+const questRoutes = require('./routes/queteRoutes');
 const shopRoutes = require('./routes/shopRoutes'); // ✅ Include shop routes
 
 const app = express();

@@ -1,6 +1,6 @@
 const express = require('express');
 const { buyCharacter, buyAnimation } = require('../controllers/shopController');
-const authenticateUser = require('../middlewares/authMiddleware');
+const authenticateUser = require('../middleware/authMiddleware');
 
 const router = express.Router();
 

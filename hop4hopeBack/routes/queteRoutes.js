@@ -1,6 +1,6 @@
 const express = require('express');
-const { updateQuestProgress } = require('../controllers/questController');
-const authenticateUser = require('../middlewares/authMiddleware');
+const { updateQuestProgress, claimQuestReward } = require('../controllers/queteController');
+const authenticateUser = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
