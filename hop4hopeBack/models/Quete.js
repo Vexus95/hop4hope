@@ -8,6 +8,7 @@ const Quete = sequelize.define('Quete', {
     points: { type: DataTypes.INTEGER, allowNull: false },
     date_debut: { type: DataTypes.DATE, allowNull: false },
     date_fin: { type: DataTypes.DATE, allowNull: false },
+    defaultGoal: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 10 } // Default goal for quests
 }, { timestamps: false });
 
 module.exports = Quete;
