@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Utilisateur, Personnage, Quete, Possede, Avoir } = require('../models');
+require('dotenv').config();
 
-const SECRET_KEY = "your_secret_key"; // Replace with an environment variable in production
+const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key";
 
 // Register a new user
 const registerUser = async (req, res) => {
