@@ -4,7 +4,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBar from '../component/ProgressBar'; // Import du composant ProgressBar
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import UserPoints from '../component/UserPoints'; // Import du composant UserPoints
 
 interface Quest {
   id: number;
@@ -165,10 +165,13 @@ const QuestsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Bouton Actualiser en haut à droite */}
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchQuests}>
-        <Icon name="refresh" size={30} color="#5468ff" />
-      </TouchableOpacity>
+      {/* Box des points de l'utilisateur en haut et bouton actualiser */}
+      <View style={styles.header}>
+        <UserPoints />
+        <TouchableOpacity style={styles.refreshButton} onPress={fetchQuests}>
+          <Icon name="refresh" size={30} color="#5468ff" />
+        </TouchableOpacity>
+      </View>
 
       <Text style={styles.sectionTitle}>Daily</Text>
       <FlatList
@@ -212,15 +215,18 @@ const styles = StyleSheet.create({
     color: "#777",
     textAlign: "center",
   },
+  header: {
+    flexDirection: 'row', // Aligne horizontalement les éléments
+    justifyContent: 'space-between', // Espacement entre la box des points et le bouton
+    alignItems: 'center', // Aligne verticalement au centre
+    marginBottom: 20,
+  },
   refreshButton: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex: 10, // Assure que le bouton est au-dessus des autres éléments
+    marginLeft: 10, // Espacement entre la box des points et le bouton
   },
   questTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
   questDescription: { fontSize: 14, color: '#777' },
-  points: { fontSize: 16, fontWeight: 'bold', color: '#5468ff'},
+  points: { fontSize: 16, fontWeight: 'bold', color: '#5468ff' },
 });
 
 export default QuestsScreen;
