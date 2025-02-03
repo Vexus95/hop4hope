@@ -1,16 +1,17 @@
 const { Personnage } = require('../models');
 
-// Récupérer tous les personnages
 const getAllPersonnages = async (req, res) => {
     try {
         const personnages = await Personnage.findAll();
 
-        // Convert hex string to array for each personnage
+        // ✅ Convert Hex String to Hex Array for all characters
         const formattedPersonnages = personnages.map(p => ({
             Id_personnage: p.Id_personnage,
             Nom: p.Nom,
             coût: p.coût,
-            matrice: p.matrice.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+            matrice: p.matrice 
+                ? p.matrice.match(/.{1,2}/g).map(byte => "0x" + byte.toUpperCase()) 
+                : []
         }));
 
         res.json(formattedPersonnages);
@@ -18,6 +19,7 @@ const getAllPersonnages = async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de la récupération des personnages.' });
     }
 };
+
 
 // Ajouter un nouveau personnage
 const createPersonnage = async (req, res) => {
@@ -46,18 +48,21 @@ const getPersonnageById = async (req, res) => {
         }
 
         // ✅ Convert Hex String (Stored in DB) back to Hex Array
-        const hexArray = personnage.matrice.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
+        const hexArray = personnage.matrice 
+            ? personnage.matrice.match(/.{1,2}/g).map(byte => "0x" + byte.toUpperCase()) 
+            : [];
 
         res.json({
             Id_personnage: personnage.Id_personnage,
             Nom: personnage.Nom,
             coût: personnage.coût,
-            matrice: hexArray // ✅ Return as an array instead of a string
+            matrice: hexArray // ✅ Now returned in hex format
         });
     } catch (error) {
         res.status(500).json({ error: "Error retrieving character" });
     }
 };
+
 
 // ✅ Corrected module.exports (Include all functions)
 module.exports = { getAllPersonnages, createPersonnage, getPersonnageById };
