@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import Constants from 'expo-constants';
 
-const API_URL = "http://192.168.1.14:5000/users";
+const REACT_NATIVE_SERVER_IP = Constants.expoConfig.extra.REACT_NATIVE_SERVER_IP;
+
 
 // Définition du type de props
 interface LoginScreenProps {
@@ -13,7 +15,7 @@ interface LoginScreenProps {
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users`;
   const handleLogin = async () => {
     try {
       console.log("Tentative de connexion avec:", email, password);
