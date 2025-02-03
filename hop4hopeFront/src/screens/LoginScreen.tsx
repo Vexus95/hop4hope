@@ -8,7 +8,11 @@ import { RootStackParamList } from "../../App";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 
-const REACT_NATIVE_SERVER_IP = Constants.expoConfig.extra.REACT_NATIVE_SERVER_IP;
+const REACT_NATIVE_SERVER_IP = Constants.expoConfig?.extra?.REACT_NATIVE_SERVER_IP;
+
+if (!REACT_NATIVE_SERVER_IP) {
+  throw new Error('REACT_NATIVE_SERVER_IP is not defined in app.config.js or app.json');
+}
 
 interface LoginScreenProps {
   onLoginSuccess: () => void;
