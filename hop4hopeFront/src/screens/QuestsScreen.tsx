@@ -72,8 +72,6 @@ const QuestsScreen = () => {
         currentProgress: progressResponses[index].data.currentProgress, // Ajout de la progression réelle
       }));
 
-      console.log("Progressions reçues :", progressResponses.map(res => res.data));
-
       // Filtrer les quêtes pour ne pas afficher celles qui ont été réclamées
       const questNotCompleted = questsWithProgress.filter(q => !q.rewardClaimed);
 

@@ -3,19 +3,25 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from "reac
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Constants from 'expo-constants';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from "../../App";
+import { StackNavigationProp } from "@react-navigation/stack";
+
 
 const REACT_NATIVE_SERVER_IP = Constants.expoConfig.extra.REACT_NATIVE_SERVER_IP;
 
-
-// Définition du type de props
 interface LoginScreenProps {
-  onLoginSuccess: () => void;  // Fonction qui ne prend rien en paramètre et ne retourne rien
+  onLoginSuccess: () => void;
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users`;
+
+  
+
   const handleLogin = async () => {
     try {
       console.log("Tentative de connexion avec:", email, password);
@@ -32,11 +38,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         throw new Error("Token non reçu");
       }
 
-      // 🔒 Sauvegarde du token
       await AsyncStorage.setItem("userToken", token);
-
-
-      Alert.alert("Succès", "Connexion réussie !");
       onLoginSuccess();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -73,7 +75,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         </TouchableOpacity>
 
         <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate('CreateAccount')}>
           <Text style={styles.link}>Créer un compte</Text>
+        </TouchableOpacity>
           <Text style={styles.link}>Mot de passe oublié</Text>
         </View>
       </View>
