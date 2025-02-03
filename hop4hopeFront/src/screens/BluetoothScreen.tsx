@@ -1,17 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, PermissionsAndroid, Platform } from 'react-native';
-import { BleManager, Device, Characteristic } from 'react-native-ble-plx';
-import { Buffer } from 'buffer';  // Permet d'envoyer des données en binaire
+import { View, Text, TouchableOpacity, PermissionsAndroid, Platform, StyleSheet } from 'react-native';
+import { BleManager, Device } from 'react-native-ble-plx';
+import { Buffer } from 'buffer';
 
-const TARGET_DEVICE_NAME = "SportsLab_Tamagochi";
+// Configuration des UUID de service et caractéristique
 const SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 const RX_CHARACTERISTIC_UUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
-const SENSOR_CHARACTERISTIC_UUID = "f3641402-b000-4042-ba50-05ca45bf8abc";
 
-const BluetoothScreen = () => {
+// Création de données d'image simples avec trois points noirs
+const createSimpleImageBuffers = () => {
+  // Créer un buffer de 168 octets
+  const imageData = [
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xc0, 
+0xe0, 0xe0, 0xe0, 0xe0, 0xf0, 0xf0, 0xf0, 0xf8, 0xf8, 0x78, 0x18, 0x08, 0x18, 0x08, 0x18, 0x18, 
+0x38, 0x10, 0xb0, 0xb0, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0xc0, 0xfe, 0x7f, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x20, 0x20, 0x20, 
+0x30, 0x30, 0x18, 0x0c, 0x4e, 0xce, 0x8f, 0x85, 0x86, 0xe2, 0xe6, 0xe6, 0xee, 0xcc, 0xd8, 0x38, 
+0xf0, 0xe0, 0xc0, 0xf0, 0x78, 0x78, 0x38, 0x78, 0x38, 0x38, 0x58, 0xf0, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0xfc, 0x57, 0x03, 0x00, 0x08, 0x08, 0x0c, 0x04, 0x04, 0x04, 0x04, 0x08, 0x08, 
+0x18, 0x30, 0x40, 0x60, 0xc6, 0x00, 0x00, 0x0f, 0x17, 0x13, 0x17, 0x1f, 0x10, 0x50, 0xcf, 0x83, 
+0x03, 0x21, 0xc0, 0x00, 0x01, 0x0f, 0xff, 0xfe, 0x1e, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x29, 0x3f, 
+0x3e, 0x7e, 0x7e, 0x3e, 0x0e, 0x02, 0x82, 0xc2, 0x42, 0x42, 0x42, 0x5a, 0x7e, 0x7e, 0x7c, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f, 0xfd, 0xfc, 0xf8, 0x58, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x06, 0x00, 0x06, 0x03, 0x01, 0x01, 0x01, 0x19, 0x00, 0x00, 0x78, 0xf4, 0xf4, 0x7c, 0xd4, 
+0x84, 0xd5, 0xf9, 0xe0, 0xe0, 0xc2, 0x81, 0x00, 0xc0, 0xf8, 0xff, 0x83, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0xa0, 0xf0, 0x78, 0x7c, 0x7c, 0x7c, 0x7c, 0x78, 0x61, 0x61, 0x61, 0x63, 0x41, 0x7d, 
+0x7f, 0x7f, 0x3e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f, 0x75, 0xd0, 
+0xc0, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x7d, 0x7f, 0xff, 0xfe, 0xfc, 0xfc, 
+0xf8, 0x79, 0xf8, 0xd0, 0xf1, 0x33, 0x33, 0x3b, 0x1b, 0x09, 0x0d, 0x07, 0x07, 0x03, 0x07, 0x0f, 
+0x0f, 0x0c, 0x08, 0x0e, 0x0f, 0x0f, 0x0f, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x06, 0x06, 0x04, 0x04, 0x04, 0x04, 
+0x04, 0x04, 0x06, 0x06, 0x06, 0x06, 0x06, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+  ];
+
+  // Split the image data into 3 buffers
+  return [
+    new Uint8Array([0x1B, 0x00, ...imageData.slice(0, 168)]),   // First buffer
+    new Uint8Array([0x1B, 0x01, ...imageData.slice(168, 336)]), // Second buffer
+    new Uint8Array([0x1B, 0x02, ...imageData.slice(336, 504)])  // Third buffer
+  ];
+};
+
+const BluetoothImageSender = () => {
   const [bleManager] = useState(new BleManager());
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
-  const [sensorData, setSensorData] = useState<string | null>(null);
   const [status, setStatus] = useState("Prêt à scanner");
 
   useEffect(() => {
@@ -21,31 +65,28 @@ const BluetoothScreen = () => {
     };
   }, []);
 
-  // Demande les permissions BLE pour Android
   const requestPermissions = async () => {
     if (Platform.OS === 'android') {
-      const permissions = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE, 
-      ]);
-      
-      if (
-        permissions[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] !== 'granted' ||
-        permissions[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] !== 'granted' ||
-        permissions[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] !== 'granted'
-      ) {
-        console.log('Permissions BLE refusées');
-        setStatus("Permissions BLE refusées");
-      } else {
-        console.log('Permissions BLE accordées');
-        setStatus("Permissions BLE accordées");
+      try {
+        const granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
+        ]);
+
+        const isPermissionsGranted = 
+          granted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] === 'granted' &&
+          granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] === 'granted' &&
+          granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] === 'granted';
+
+        setStatus(isPermissionsGranted ? "Permissions BLE accordées" : "Permissions BLE refusées");
+      } catch (err) {
+        console.error("Erreur de permissions", err);
+        setStatus("Erreur de permissions BLE");
       }
     }
   };
 
-  // Scan pour trouver uniquement "SportsLab_Tamagochi"
   const startScan = () => {
     setStatus("Scan en cours...");
     bleManager.startDeviceScan(null, null, (error, device) => {
@@ -55,58 +96,76 @@ const BluetoothScreen = () => {
         return;
       }
 
-      if (device?.name === TARGET_DEVICE_NAME) {
-        console.log(`Appareil détecté : ${device.name}`);
-        setStatus(`Appareil trouvé : ${device.name}`);
+      if (device?.name === "SportsLab_Tamagochi") {
         bleManager.stopDeviceScan();
         connectToDevice(device);
       }
     });
 
-    // Arrêter le scan après 10 secondes
     setTimeout(() => {
       bleManager.stopDeviceScan();
-      setStatus("Aucun appareil trouvé");
+      setStatus("Scan terminé");
     }, 10000);
   };
 
   const connectToDevice = async (device: Device) => {
     try {
-      console.log(`Connexion à ${device.name}...`);
       setStatus(`Connexion à ${device.name}...`);
-  
       const connectedDevice = await bleManager.connectToDevice(device.id);
       await connectedDevice.discoverAllServicesAndCharacteristics();
       
       setConnectedDevice(connectedDevice);
       setStatus(`Connecté à ${connectedDevice.name}`);
-  
-      // 📌 Lister tous les services et caractéristiques
-      const services = await connectedDevice.services();
-      for (const service of services) {
-        console.log(`Service trouvé : ${service.uuid}`);
-  
-        const characteristics = await connectedDevice.characteristicsForService(service.uuid);
-        for (const characteristic of characteristics) {
-          console.log(`  ↳ Characteristic : ${characteristic.uuid}`);
-          console.log(`     - Readable: ${characteristic.isReadable}`);
-          console.log(`     - WritableWithResponse: ${characteristic.isWritableWithResponse}`);
-          console.log(`     - WritableWithoutResponse: ${characteristic.isWritableWithoutResponse}`);
-          console.log(`     - Notifiable: ${characteristic.isNotifiable}`);
-        }
-      }
-  
-      // Activer les notifications seulement si la caractéristique existe
-      startSensorNotifications(connectedDevice);
     } catch (error) {
       console.error("Erreur de connexion :", error);
       setStatus("Échec de connexion");
     }
   };
-  
-  
 
-  // Envoi de commandes
+  const sendBuffer = async (buffer: Uint8Array) => {
+    if (!connectedDevice) {
+      console.error("Aucun appareil connecté");
+      return;
+    }
+
+    try {
+      const base64Data = Buffer.from(buffer).toString("base64");
+      await connectedDevice.writeCharacteristicWithoutResponseForService(
+        SERVICE_UUID,
+        RX_CHARACTERISTIC_UUID,
+        base64Data
+      );
+      console.log(`Buffer envoyé: ${buffer[1]}`);
+    } catch (error) {
+      console.error("Erreur d'envoi du buffer :", error);
+    }
+  };
+
+  const sendImageToScreen = async () => {
+    if (!connectedDevice) {
+      setStatus("Connectez un appareil d'abord");
+      return;
+    }
+
+    try {
+      // Créer les buffers avec les points noirs
+      const buffers = createSimpleImageBuffers();
+
+      // Envoi séquentiel des buffers
+      for (const buffer of buffers) {
+        await sendBuffer(buffer);
+        await new Promise(resolve => setTimeout(resolve, 200)); // Délai entre chaque buffer
+      }
+
+      // Rafraîchir l'écran
+      await sendBuffer(new Uint8Array([0x1C]));
+      setStatus("Image avec points noirs envoyée");
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de l'image :", error);
+      setStatus("Échec de l'envoi de l'image");
+    }
+  };
+
   const sendCommand = async (command: number, value: number = 0) => {
     if (!connectedDevice) return;
 
@@ -123,65 +182,52 @@ const BluetoothScreen = () => {
     }
   };
 
-  // Activer la réception des données capteur
-  const startSensorNotifications = async (device: Device) => {
-    try {
-      await device.monitorCharacteristicForService(
-        SERVICE_UUID,
-        SENSOR_CHARACTERISTIC_UUID,
-        (error, characteristic) => {
-          if (error) {
-            console.error("Erreur de lecture des capteurs :", error);
-            return;
-          }
-
-          if (characteristic?.value) {
-            const rawData = Buffer.from(characteristic.value, 'base64'); // Convertir en buffer
-            setSensorData(rawData.toString('hex')); // Afficher en hexadécimal
-            console.log("Données capteur reçues :", rawData);
-          }
-        }
-      );
-    } catch (error) {
-      console.error("Erreur d'abonnement aux capteurs :", error);
-    }
-  };
-
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ marginBottom: 20 }}>{status}</Text>
-
+    <View style={styles.container}>
+      <Text style={styles.statusText}>{status}</Text>
+      <TouchableOpacity onPress={() => sendCommand(0x1D, 100)} style={{ padding: 10, backgroundColor: 'orange', margin: 5 }}>
+            <Text style={{ color: 'white' }}>Changer contraste (120)</Text>
+          </TouchableOpacity>
+      <TouchableOpacity onPress={() => sendCommand(0x1E, 1)} style={{ padding: 10, backgroundColor: 'purple', margin: 5 }}>
+          <Text style={{ color: 'white' }}>Allumer le rétroéclairage</Text>
+          </TouchableOpacity>
+      <TouchableOpacity onPress={() => sendCommand(0x1E, 0)} style={{ padding: 10, backgroundColor: 'black', margin: 5 }}>
+            <Text style={{ color: 'white' }}>Eteindre le rétroéclairage</Text>
+          </TouchableOpacity>
       {!connectedDevice ? (
-        <TouchableOpacity onPress={startScan} style={{ padding: 10, backgroundColor: 'blue', borderRadius: 5 }}>
-          <Text style={{ color: 'white' }}>Scanner et se connecter</Text>
+        <TouchableOpacity style={styles.button} onPress={startScan}>
+          <Text style={styles.buttonText}>Scanner et se connecter</Text>
         </TouchableOpacity>
       ) : (
-        <>
-          <Text>Connecté à {connectedDevice.name}</Text>
-
-          {/* Boutons pour envoyer des commandes */}
-          <TouchableOpacity onPress={() => sendCommand(0x1C)} style={{ padding: 10, backgroundColor: 'green', margin: 5 }}>
-            <Text style={{ color: 'white' }}>Mettre à jour l'écran</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => sendCommand(0x1D, 50)} style={{ padding: 10, backgroundColor: 'orange', margin: 5 }}>
-            <Text style={{ color: 'white' }}>Changer contraste (50)</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => sendCommand(0x1E, 1)} style={{ padding: 10, backgroundColor: 'purple', margin: 5 }}>
-            <Text style={{ color: 'white' }}>Allumer le rétroéclairage</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => sendCommand(0x1E, 0)} style={{ padding: 10, backgroundColor: 'gray', margin: 5 }}>
-            <Text style={{ color: 'white' }}>Éteindre le rétroéclairage</Text>
-          </TouchableOpacity>
-
-          {/* Affichage des données capteur */}
-          {sensorData && <Text>Données capteur : {sensorData}</Text>}
-        </>
+        <TouchableOpacity style={styles.button} onPress={sendImageToScreen}>
+          <Text style={styles.buttonText}>Envoyer 3 points noirs</Text>
+        </TouchableOpacity>
       )}
     </View>
   );
 };
 
-export default BluetoothScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
+  },
+  statusText: {
+    marginBottom: 20,
+    fontSize: 16
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center'
+  }
+});
+
+export default BluetoothImageSender;
