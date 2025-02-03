@@ -5,6 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBar from '../component/ProgressBar'; // Import du composant ProgressBar
 import Icon from "react-native-vector-icons/FontAwesome";
 import UserPoints from '../component/UserPoints'; // Import du composant UserPoints
+import Constants from 'expo-constants';
+
+const REACT_NATIVE_SERVER_IP = Constants.expoConfig.extra.REACT_NATIVE_SERVER_IP;
 
 interface Quest {
   id: number;
@@ -19,9 +22,9 @@ interface Quest {
   questStatus?: string;
 }
 
-const API_URL = "http://192.168.1.14:5000/users/quests"; // URL pour récupérer les quêtes
-const PROGRESS_URL = "http://192.168.1.14:5000/quests/progress"; // URL pour récupérer la progression
-const CLAIM_REWARD_URL = "http://192.168.1.14:5000/quests/claim-reward";
+const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users/quests`; // URL pour récupérer les quêtes
+const PROGRESS_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/quests/progress`; // URL pour récupérer la progression
+const CLAIM_REWARD_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/quests/claim-reward`;
 
 const QuestsScreen = () => {
   const [quests, setQuests] = useState<{ daily: Quest[]; weekly: Quest[] }>({ daily: [], weekly: [] });

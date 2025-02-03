@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
-const API_URL = "http://192.168.1.14:5000/users/info"; // Mise à jour avec la nouvelle route pour récupérer les infos de l'utilisateur
+const REACT_NATIVE_SERVER_IP = Constants.expoConfig.extra.REACT_NATIVE_SERVER_IP;
+
+ // Mise à jour avec la nouvelle route pour récupérer les infos de l'utilisateur
 
 const UserPoints = () => {
   const [points, setPoints] = useState<number | null>(null); // Initialisation des points
   const [loading, setLoading] = useState(true);
+  const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users/info`;
 
   useEffect(() => {
     const fetchUserPoints = async () => {

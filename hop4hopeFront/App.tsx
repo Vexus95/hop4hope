@@ -6,6 +6,7 @@ import DanceScreen from './src/screens/DanceScreen';
 import MyDeviceScreen from './src/screens/MyBraceletScreen';
 import QuestsScreen from './src/screens/QuestsScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import ShopScreen from './src/screens/ShopScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
           <Tab.Screen name="Quests" component={QuestsScreen} />
           <Tab.Screen name="Wardrobe" component={WardrobeScreen} />
           <Tab.Screen name="Dance" component={DanceScreen} />
+          <Tab.Screen name="Shop" component={ShopScreen} />
         </Tab.Navigator>
       ) : ( // Sinon, afficher l'écran de connexion
         <LoginScreen onLoginSuccess={handleLoginSuccess} />
