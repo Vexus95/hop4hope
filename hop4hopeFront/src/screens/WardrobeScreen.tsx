@@ -72,8 +72,8 @@ const WardrobeScreen = () => {
 
   const getImageSource = (imagePath: string) => {
     const images: { [key: string]: any } = {
-      "./hop4hope/hop4hopeFront/assets/pixil-layer-2.png": require("../../assets/pixil-layer-2.png"),
-      "/hop4hope/hop4hopeFront/assets/pixil-layer-3.png": require("../../assets/pixil-layer-3.png"),
+      "./assets/pixil-layer-2.png": require("../../assets/pixil-layer-2.png"),
+      "./assets/pixil-layer-3.png": require("../../assets/pixil-layer-3.png"),
     };
   
     return images[imagePath]; // Fallback image

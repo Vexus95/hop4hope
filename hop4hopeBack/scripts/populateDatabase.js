@@ -84,8 +84,8 @@ const populateDatabase = async () => {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
         // 🔹 Add Default Character Images
-        const cowImage = "./hop4hope/hop4hopeFront/assets/pixil-layer-2.png"; 
-        const bunnyImage = "/hop4hope/hop4hopeFront/assets/pixil-layer-3.png"; 
+        const cowImage = "./assets/pixil-layer-2.png"; 
+        const bunnyImage = "./assets/pixil-layer-3.png"; 
 
         // 🔹 Create Sample Characters
         const characters = await Personnage.bulkCreate([
