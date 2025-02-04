@@ -38,13 +38,36 @@ const WardrobeScreen = () => {
       console.error("Erreur lors de la récupération des personnages possédés", error);
     }
   };
+  const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/personnages`;
+  useEffect(() => {
+    if (selectedCharacter) {
+      sendActiveCharacter();
+    }
+  }, [selectedCharacter]);
+  const sendActiveCharacter = async () => {
+    const token = await AsyncStorage.getItem("userToken");
+      try {
+      console.log("Coucou",selectedCharacter?.id);
+      const response = await axios.post(
+        `${API_URL}/set-active`, 
+        { personnageId: selectedCharacter?.id }, 
+        { headers: { Authorization: `Bearer ${token}` } } // <-- Correct placement
+      );
+      console.log(response.data);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.error || "Mot de passe incorrect";
+        console.log(errorMessage);
+      } else {
+      }
+    }
+  };
 
   const fetchPersonnageById = async (characterId: number) => {
     try {
       const response = await axios.get(`http://${REACT_NATIVE_SERVER_IP}:5000/personnages/${characterId}`, {
         timeout: 10000, // 10 seconds timeout
       });
-      console.log(response.data)
       const newPersonnage: Personnage = {
         id: response.data.Id_personnage,
         nom: response.data.Nom,
@@ -82,11 +105,13 @@ const WardrobeScreen = () => {
   return (
     <View style={styles.screen}>
       <View style={styles.selectedContainer}>
-        <Image source={getImageSource(selectedCharacter.image)} style={styles.selectedImage} />
+        {selectedCharacter && (
+          <Image source={getImageSource(selectedCharacter.image)} style={styles.selectedImage} />
+        )}
       </View>
+
       <ScrollView contentContainerStyle={styles.gridContainer}>
       {personnages.map((character) => {
-        console.log("Character rendering: \n", character);
         return (
           <TouchableOpacity key={character.id} onPress={() => setSelectedCharacter(character)}>
             <Image
