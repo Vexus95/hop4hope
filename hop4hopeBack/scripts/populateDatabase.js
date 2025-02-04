@@ -11,18 +11,13 @@ const populateDatabase = async () => {
 
         // 🔹 Create Sample Users
         const hashedPassword = await bcrypt.hash("password123", 10);
-        const users = await Utilisateur.bulkCreate([
-            { Nom: "John", Prénom: "Doe", Email: "john@example.com", motdepasse: hashedPassword, points: 500 },
-            { Nom: "Jane", Prénom: "Smith", Email: "jane@example.com", motdepasse: hashedPassword, points: 800 }
-        ]);
-        console.log("✅ Users added.");
 
         // 🔹 Convert Hex Arrays to Hex Strings
         const hexArrayToString = (hexArray) => {
             return hexArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
         };
 
-        // 🔹 Sample Hex Arrays for Personnages and Animations
+        // 🔹 Sample Hex Arrays for Personnages
         const warriorMatrice = hexArrayToString([0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -64,42 +59,51 @@ const populateDatabase = async () => {
         ]);
         console.log("✅ Characters added.");
 
+        // Set default character as the first one (Warrior)
+        const defaultPersonnage = characters[0];
+
         // 🔹 Sample Hex Arrays for Animations
         const attackAnimation = hexArrayToString([0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80]);
         const defendAnimation = hexArrayToString([0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, 0xFF]);
 
         // 🔹 Create Sample Animations
         const animations = await Animation.bulkCreate([
-            { name: "Attack", matrice: attackAnimation, Id_personnage: characters[0].Id_personnage },
+            { name: "Attack", matrice: attackAnimation, Id_personnage: defaultPersonnage.Id_personnage },
             { name: "Defend", matrice: defendAnimation, Id_personnage: characters[1].Id_personnage }
         ]);
         console.log("✅ Animations added.");
 
-        // 🔹 Create Sample Quests
-        const quests = await Quete.bulkCreate([
-            { Nom: "First Steps", description: "Walk 100 steps", points: 50, date_debut: new Date(), date_fin: new Date(), defaultGoal: 100 },
-            { Nom: "Hero's Journey", description: "Win 5 battles", points: 150, date_debut: new Date(), date_fin: new Date(), defaultGoal: 5 }
+        // Set default animation for the default character
+        const defaultAnimation = animations[0];
+
+        // Assign default animation to the default personnage
+        await Personnage.update(
+            { activeAnimationId: defaultAnimation.Id_animation },
+            { where: { Id_personnage: defaultPersonnage.Id_personnage } }
+        );
+
+        // 🔹 Create Sample Users with Default Active Personnage
+        const users = await Utilisateur.bulkCreate([
+            { 
+                Nom: "John", Prénom: "Doe", Email: "john@example.com",
+                motdepasse: hashedPassword, points: 500, activePersonnageId: defaultPersonnage.Id_personnage
+            },
+            { 
+                Nom: "Jane", Prénom: "Smith", Email: "jane@example.com",
+                motdepasse: hashedPassword, points: 800, activePersonnageId: defaultPersonnage.Id_personnage
+            }
         ]);
-        console.log("✅ Quests added.");
+        console.log("✅ Users added with default active character.");
 
-        // 🔹 Assign a Quest to a User (Progress Tracking)
-        await Avoir.create({
-            Id_utilisateur: users[0].Id_utilisateur,
-            Id_quete: quests[0].Id_quete,
-            currentProgress: 20, // User has completed 20% of the quest
-            goal: quests[0].defaultGoal,
-            rewardClaimed: false
-        });
+        // 🔹 Assign Default Character to Each User
+        for (const user of users) {
+            await Possede.create({
+                Id_utilisateur: user.Id_utilisateur,
+                Id_personnage: defaultPersonnage.Id_personnage
+            });
+        }
 
-        console.log("✅ Quest progress assigned.");
-
-        // 🔹 Give User a Character
-        await Possede.create({
-            Id_utilisateur: users[0].Id_utilisateur,
-            Id_personnage: characters[0].Id_personnage
-        });
-
-        console.log("✅ Characters assigned to users.");
+        console.log("✅ Default character assigned to users.");
 
         console.log("🎉 Database populated successfully!");
         process.exit();
