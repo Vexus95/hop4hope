@@ -17,6 +17,7 @@ Personnage.belongsToMany(Utilisateur, { through: Possede, foreignKey: 'Id_person
 // Relation Personnage <--> Animation (One-to-Many)
 Personnage.hasMany(Animation, { foreignKey: 'Id_personnage' });
 Animation.belongsTo(Personnage, { foreignKey: 'Id_personnage' });
+Utilisateur.belongsTo(Personnage, { foreignKey: 'activePersonnageId', as: 'activePersonnage' });
 
 module.exports = {
     sequelize,
@@ -27,3 +28,5 @@ module.exports = {
     Avoir,
     Possede,
 };
+
+

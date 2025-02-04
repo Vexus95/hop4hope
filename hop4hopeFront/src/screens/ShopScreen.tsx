@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, FlatList, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, FlatList, Alert, Image } from 'react-native';
 import { Card, Title, Paragraph } from "react-native-paper";
 import UserPoints from '../component/UserPoints';
 import axios from "axios";
@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const REACT_NATIVE_SERVER_IP = Constants.expoConfig?.extra?.REACT_NATIVE_SERVER_IP;
 
 interface Personnage {
+  image: any;
   id: number;
   nom: string;
   coût: number;
@@ -58,6 +59,7 @@ const ShopScreen = () => {
         nom: p.Nom,
         coût: p.coût,
         matrice: p.matrice,
+        image: p.image
       }));
 
       setPersonnages(allPersonnages);
@@ -101,6 +103,15 @@ const ShopScreen = () => {
     }
   };
 
+  const getImageSource = (imagePath: string) => {
+    const images: { [key: string]: any } = {
+      "./hop4hope/hop4hopeFront/assets/pixil-layer-2.png": require("../../assets/pixil-layer-2.png"),
+      "/hop4hope/hop4hopeFront/assets/pixil-layer-3.png": require("../../assets/pixil-layer-3.png"),
+    };
+  
+    return images[imagePath]; // Fallback image
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" style={styles.loader} />;
   }
@@ -115,7 +126,6 @@ const ShopScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
           const isOwned = ownedCharacterIds.includes(item.id);
-
           return (
             <TouchableOpacity onPress={() => !isOwned && buyCharacter(item.id)} disabled={isOwned}>
               <Card style={[styles.card, isOwned && styles.ownedCard]}>
@@ -124,6 +134,7 @@ const ShopScreen = () => {
                   <Paragraph style={[styles.text, isOwned && styles.ownedText]}>
                     {isOwned ? "Already possessed" : `Coût: ${item.coût} 🪙`}
                   </Paragraph>
+                  <Image source={getImageSource(item.image)} style={styles.image} />
                 </Card.Content>
               </Card>
             </TouchableOpacity>
@@ -168,6 +179,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Gliker',
     fontSize: 18,
   },
+  image: {
+    width: "100%",
+    height: 150,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    resizeMode: "contain", // Ensures the whole image is visible without cropping
+  },
+  
 });
 
 export default ShopScreen;

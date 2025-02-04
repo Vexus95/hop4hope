@@ -6,8 +6,7 @@ const router = express.Router();
 
 router.get('/getAll', getAllPersonnages);
 router.post('/', createPersonnage);
-router.get('/:id', getPersonnageById);
 router.post('/set-active', authenticateUser, setActivePersonnage);
-router.get('/active', authenticateUser, getUserActivePersonnage);
-
+router.get('/active', authenticateUser, getUserActivePersonnage); 
+router.get('/:id', getPersonnageById);
 module.exports = router;

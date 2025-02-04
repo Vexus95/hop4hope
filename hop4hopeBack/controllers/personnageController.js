@@ -44,6 +44,7 @@ const getPersonnageById = async (req, res) => {
     try {
         const { id } = req.params;
         const personnage = await Personnage.findByPk(id);
+        
 
         if (!personnage) {
             return res.status(404).json({ error: "Character not found" });
@@ -92,20 +93,29 @@ const getUserActivePersonnage = async (req, res) => {
     try {
         const userId = req.user.id;
 
+        // ✅ Fetch user with active character
         const user = await Utilisateur.findByPk(userId, {
             include: [{ model: Personnage, as: "activePersonnage" }]
         });
 
-        if (!user.activePersonnageId) {
+        console.log(user)
+
+        // ✅ Check if activePersonnageId is set
+        if (!user || !user.activePersonnage) {
             return res.status(404).json({ error: "No active character set for user" });
         }
+
+        // ✅ Convert Hex String (Stored in DB) back to Hex Array
+        const hexArray = user.activePersonnage.matrice 
+            ? user.activePersonnage.matrice.match(/.{1,2}/g).map(byte => "0x" + byte.toUpperCase()) 
+            : [];
 
         res.json({
             activePersonnage: {
                 Id_personnage: user.activePersonnage.Id_personnage,
                 Nom: user.activePersonnage.Nom,
                 coût: user.activePersonnage.coût,
-                matrice: user.activePersonnage.matrice,
+                matrice: hexArray,
                 activeAnimationId: user.activePersonnage.activeAnimationId
             }
         });
@@ -113,6 +123,7 @@ const getUserActivePersonnage = async (req, res) => {
         res.status(500).json({ error: "Error retrieving active character" });
     }
 };
+
 
 
 // ✅ Corrected module.exports (Include all functions)
