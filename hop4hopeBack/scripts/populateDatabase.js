@@ -9,7 +9,7 @@ const populateDatabase = async () => {
         // 🌟 Reset all tables (Optional: Use { force: true } to drop & recreate)
         await sequelize.sync({ alter: true });
 
-        // 🔹 Create Sample Users
+        // 🔹 Hash user passwords
         const hashedPassword = await bcrypt.hash("password123", 10);
 
         // 🔹 Convert Hex Arrays to Hex Strings
@@ -17,7 +17,7 @@ const populateDatabase = async () => {
             return hexArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
         };
 
-        // 🔹 Sample Hex Arrays for Personnages
+        // 🔹 Sample Hex Matrices for Personnages
         const warriorMatrice = hexArrayToString([0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -62,18 +62,18 @@ const populateDatabase = async () => {
         // Set default character as the first one (Warrior)
         const defaultPersonnage = characters[0];
 
-        // 🔹 Sample Hex Arrays for Animations
-        const attackAnimation = hexArrayToString([0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80]);
-        const defendAnimation = hexArrayToString([0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, 0xFF]);
+        // 🔹 Sample Hex Matrices for Animations
+        const attackMatrice = hexArrayToString([0x1F, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x9A]);
+        const defendMatrice = hexArrayToString([0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11, 0x22]);
 
-        // 🔹 Create Sample Animations
+        // 🔹 Create Sample Animations (Linked to Characters)
         const animations = await Animation.bulkCreate([
-            { name: "Attack", matrice: attackAnimation, Id_personnage: defaultPersonnage.Id_personnage },
-            { name: "Defend", matrice: defendAnimation, Id_personnage: characters[1].Id_personnage }
+            { name: "Attack", matrice: attackMatrice, Id_personnage: defaultPersonnage.Id_personnage },
+            { name: "Defend", matrice: defendMatrice, Id_personnage: characters[1].Id_personnage }
         ]);
         console.log("✅ Animations added.");
 
-        // Set default animation for the default character
+        // Set default animation for the default personnage
         const defaultAnimation = animations[0];
 
         // Assign default animation to the default personnage
