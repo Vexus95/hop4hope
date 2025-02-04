@@ -5,7 +5,9 @@ const Personnage = sequelize.define('Personnage', {
     Id_personnage: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     Nom: { type: DataTypes.STRING(200), allowNull: false },
     coût: { type: DataTypes.INTEGER, allowNull: false },
-    matrice: { type: DataTypes.TEXT, allowNull: false } // ✅ Store as a HEX STRING
+    matrice: { type: DataTypes.TEXT, allowNull: false },
+    activeAnimationId: { type: DataTypes.INTEGER, allowNull: true } // ✅ New field for active animation
 }, { timestamps: false });
+
 
 module.exports = Personnage;
