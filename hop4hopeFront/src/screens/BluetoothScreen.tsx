@@ -233,23 +233,23 @@ const BluetoothImageSender = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.statusText}>{status}</Text>
-      <TouchableOpacity onPress={() => sendCommand(0x1D, 100)} style={{ padding: 10, backgroundColor: 'orange', margin: 5 }}>
-        <Text style={{ color: 'white' }}>Changer contraste (120)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => sendCommand(0x1E, 1)} style={{ padding: 10, backgroundColor: 'purple', margin: 5 }}>
-        <Text style={{ color: 'white' }}>Allumer le rétroéclairage</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => sendCommand(0x1E, 0)} style={{ padding: 10, backgroundColor: 'black', margin: 5 }}>
-        <Text style={{ color: 'white' }}>Eteindre le rétroéclairage</Text>
-      </TouchableOpacity>
+      
       {!connectedDevice ? (
         <TouchableOpacity style={styles.button} onPress={startScan}>
           <Text style={styles.buttonText}>Scanner et se connecter</Text>
         </TouchableOpacity>
+        
       ) : (
-        <TouchableOpacity style={styles.button} onPress={sendImageToScreen}>
-          <Text style={styles.buttonText}>Envoyer 3 points noirs</Text>
-        </TouchableOpacity>
+        
+        <><TouchableOpacity style={styles.button} onPress={sendImageToScreen}>
+            <Text style={styles.buttonText}>Envoyer le personnage</Text>
+          </TouchableOpacity><TouchableOpacity onPress={() => sendCommand(0x1D, 100)} style={{ padding: 10, backgroundColor: 'orange', margin: 5 }}>
+              <Text style={{ color: 'white' }}>Changer contraste</Text>
+            </TouchableOpacity><TouchableOpacity onPress={() => sendCommand(0x1E, 1)} style={{ padding: 10, backgroundColor: 'purple', margin: 5 }}>
+              <Text style={{ color: 'white' }}>Allumer le rétroéclairage</Text>
+            </TouchableOpacity><TouchableOpacity onPress={() => sendCommand(0x1E, 0)} style={{ padding: 10, backgroundColor: 'black', margin: 5 }}>
+              <Text style={{ color: 'white' }}>Eteindre le rétroéclairage</Text>
+            </TouchableOpacity></>
       )}
     </View>
   );
