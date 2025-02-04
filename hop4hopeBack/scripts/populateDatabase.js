@@ -50,7 +50,7 @@ const populateDatabase = async () => {
             0x38, 0xbe, 0x1f, 0x87, 0x03, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 
             0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 
             0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xaa]);
-        const mageMatrice = hexArrayToString([0x01, 0x03, 0x00, 0xac, 0xbb, 0x6b, 0x81, 0x88]);
+        const mageMatrice = hexArrayToString([0x01, 0x03, 0x00, 0xAC, 0xBB, 0x6B, 0x81, 0x88]);
 
         // 🔹 Add Default Character Images
         const warriorImage = "https://example.com/warrior.png"; 
@@ -108,6 +108,44 @@ const populateDatabase = async () => {
         }
 
         console.log("✅ Default character assigned to users.");
+
+        // 🔹 Define Daily and Weekly Quests
+        const quests = await Quete.bulkCreate([
+            { 
+                Nom: "Walk 500 Steps", 
+                description: "Walk 500 steps today", 
+                points: 50, 
+                date_debut: new Date(), 
+                date_fin: new Date(), 
+                defaultGoal: 500,
+                type: "daily" // ✅ Daily quest
+            },
+            { 
+                Nom: "Win 3 Battles", 
+                description: "Win 3 battles in a week", 
+                points: 200, 
+                date_debut: new Date(), 
+                date_fin: new Date(new Date().setDate(new Date().getDate() + 7)), // Ends in 7 days
+                defaultGoal: 3,
+                type: "weekly" // ✅ Weekly quest
+            }
+        ]);
+        console.log("✅ Daily and Weekly Quests added.");
+
+        // 🔹 Assign Daily and Weekly Quests to John (User 1)
+        const john = users[0];
+
+        for (const quest of quests) {
+            await Avoir.create({
+                Id_utilisateur: john.Id_utilisateur,
+                Id_quete: quest.Id_quete,
+                currentProgress: 0, 
+                goal: quest.defaultGoal,
+                rewardClaimed: false
+            });
+        }
+
+        console.log("✅ Daily and Weekly quests assigned to John.");
 
         console.log("🎉 Database populated successfully!");
         process.exit();
