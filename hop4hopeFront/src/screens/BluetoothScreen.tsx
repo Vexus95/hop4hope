@@ -84,11 +84,12 @@ const BluetoothImageSender = () => {
       const response = await axios.get(`${API_URL}/active`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(response);
-      const hexMatrice = response.data.matrice;
+      console.log("coucou", response.data);
+      const hexMatrice = response.data.activePersonnage.matrice;
+      const hexString = hexMatrice.map((h: string) => h.replace("0x", "")).join("");
       const bitArray: number[] = [];
-      for (let i = 0; i < hexMatrice.length; i += 2) {
-        const byte = parseInt(hexMatrice.substr(i, 2), 16);
+      for (let i = 0; i < hexString.length; i += 2) {
+        const byte = parseInt(hexString.substr(i, 2), 16);
         for (let j = 7; j >= 0; j--) {
           bitArray.push((byte >> j) & 1);
         }
