@@ -6,7 +6,6 @@ import WardrobeScreen from './src/screens/WardrobeScreen';
 import DanceScreen from './src/screens/DanceScreen';
 import MyDeviceScreen from './src/screens/MyBraceletScreen';
 import QuestsScreen from './src/screens/QuestsScreen';
-import BluetoothScreen from './src/screens/BluetoothScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ShopScreen from './src/screens/ShopScreen';
 import CreateAccountScreen from './src/screens/CreateAccountScreen';
