@@ -24,8 +24,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users`;
 
-  
-
   const handleLogin = async () => {
     try {
       console.log("Tentative de connexion avec:", email, password);
