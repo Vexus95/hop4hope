@@ -82,8 +82,11 @@ const WardrobeScreen = () => {
   return (
     <View style={styles.screen}>
       <View style={styles.selectedContainer}>
-        <Image source={getImageSource(selectedCharacter.image)} style={styles.selectedImage} />
+        {selectedCharacter && (
+          <Image source={getImageSource(selectedCharacter.image)} style={styles.selectedImage} />
+        )}
       </View>
+
       <ScrollView contentContainerStyle={styles.gridContainer}>
       {personnages.map((character) => {
         console.log("Character rendering: \n", character);
