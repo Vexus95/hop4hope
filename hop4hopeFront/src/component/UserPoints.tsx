@@ -4,11 +4,15 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-const REACT_NATIVE_SERVER_IP = Constants.expoConfig.extra.REACT_NATIVE_SERVER_IP;
+const REACT_NATIVE_SERVER_IP = Constants.expoConfig?.extra?.REACT_NATIVE_SERVER_IP;
+
+interface UserPointsProps {
+  pointsProp?: number | null; // Optional prop for points
+}
 
  // Mise à jour avec la nouvelle route pour récupérer les infos de l'utilisateur
 
-const UserPoints = () => {
+ const UserPoints: React.FC<UserPointsProps> = ({ pointsProp }) => {
   const [points, setPoints] = useState<number | null>(null); // Initialisation des points
   const [loading, setLoading] = useState(true);
   const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users/info`;

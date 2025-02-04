@@ -3,7 +3,7 @@ const { getAllPersonnages, createPersonnage, getPersonnageById } = require('../c
 
 const router = express.Router();
 
-router.get('/', getAllPersonnages);
+router.get('/getAll', getAllPersonnages);
 router.post('/', createPersonnage);
 router.get('/:id', getPersonnageById);
 

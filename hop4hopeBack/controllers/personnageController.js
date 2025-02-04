@@ -16,7 +16,8 @@ const getAllPersonnages = async (req, res) => {
 
         res.json(formattedPersonnages);
     } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la récupération des personnages.' });
+        console.error("Error fetching personnages:", error);
+        res.status(500).json({ error: 'Erreur lors de la récupération des personnages.', details: error.message });
     }
 };
 

@@ -25,7 +25,10 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "REACT_NATIVE_SERVER_IP": "192.168.1.14"
-    }
+      "REACT_NATIVE_SERVER_IP": "192.168.1.88"
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

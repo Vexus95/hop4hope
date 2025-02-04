@@ -9,6 +9,7 @@ import QuestsScreen from './src/screens/QuestsScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ShopScreen from './src/screens/ShopScreen';
 import CreateAccountScreen from './src/screens/CreateAccountScreen';
+import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -16,9 +17,7 @@ const Stack = createStackNavigator();
 export type RootStackParamList = {
   Login: undefined;
   CreateAccount: undefined;
-  // Ajoute d'autres routes ici si besoin
 };
-
 
 const MainApp = () => (
   <Tab.Navigator>
@@ -32,6 +31,11 @@ const MainApp = () => (
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ✅ Load fonts inside the component
+  const [fontsLoaded] = useFonts({
+    'Gliker': require('./assets/fonts/Gliker-Black.ttf'),
+  });
 
   return (
     <NavigationContainer>
