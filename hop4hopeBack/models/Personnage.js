@@ -6,7 +6,7 @@ const Personnage = sequelize.define('Personnage', {
     Nom: { type: DataTypes.STRING(200), allowNull: false },
     coût: { type: DataTypes.INTEGER, allowNull: false },
     matrice: { type: DataTypes.TEXT, allowNull: false },
-    activeAnimationId: { type: DataTypes.INTEGER, allowNull: true } // ✅ New field for active animation
+    activeAnimationId: { type: DataTypes.INTEGER, allowNull: true }
 }, { timestamps: false });
 
 
