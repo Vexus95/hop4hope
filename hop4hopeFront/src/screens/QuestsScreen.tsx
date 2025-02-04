@@ -179,18 +179,26 @@ const QuestsScreen = () => {
       </View>
 
       <Text style={styles.sectionTitle}>Daily</Text>
-      <FlatList
-        data={quests.daily}
-        renderItem={renderQuest}
-        keyExtractor={(item) => item.id ? item.id.toString() : 'defaultKey'}
-      />
+      {quests.daily.length === 0 ? (
+        <Text style={styles.emptyMessage}>Tu as fini toutes les quêtes journalières !</Text>
+      ) : (
+        <FlatList
+          data={quests.daily}
+          renderItem={renderQuest}
+          keyExtractor={(item) => item.id ? item.id.toString() : 'defaultKey'}
+        />
+      )}
 
       <Text style={styles.sectionTitle}>Weekly</Text>
-      <FlatList
-        data={quests.weekly}
-        renderItem={renderQuest}
-        keyExtractor={(item) => item.id ? item.id.toString() : 'defaultKey'}
-      />
+      {quests.weekly.length === 0 ? (
+        <Text style={styles.emptyMessage}>Tu as fini toutes les quêtes hebdomadaires !</Text>
+      ) : (
+        <FlatList
+          data={quests.weekly}
+          renderItem={renderQuest}
+          keyExtractor={(item) => item.id ? item.id.toString() : 'defaultKey'}
+        />
+      )}
     </View>
   );
 };
@@ -232,6 +240,12 @@ const styles = StyleSheet.create({
   questTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
   questDescription: { fontSize: 14, color: '#777' },
   points: { fontSize: 16, fontWeight: 'bold', color: '#5468ff' },
+  emptyMessage: {
+    fontSize: 16,
+    color: '#777',
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });
 
 export default QuestsScreen;
