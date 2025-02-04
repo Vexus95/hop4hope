@@ -84,7 +84,7 @@ const QuestsScreen = () => {
         const startDate = new Date(q.date_debut);
         const endDate = new Date(q.date_fin);
         const diffInDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-        return diffInDays === 0;
+        return diffInDays === 1;
       });
 
       const weeklyQuests = questNotCompleted.filter((q) => {
