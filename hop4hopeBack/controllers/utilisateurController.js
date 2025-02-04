@@ -54,6 +54,14 @@ const loginUser = async (req, res) => {
     }
 };
 
+const logoutUser = async (req, res) => {
+    try {
+        res.json({ message: "Logged out successfully. Please remove the token on the client side." });
+    } catch (error) {
+        res.status(500).json({ error: "Error logging out" });
+    }
+};
+
 // Get all characters a user owns
 const getUserCharacters = async (req, res) => {
     try {
@@ -118,4 +126,4 @@ const getUserInfo = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getUserCharacters, getUserQuests, getUserInfo };
+module.exports = { registerUser, loginUser, logoutUser, getUserCharacters, getUserQuests, getUserInfo };

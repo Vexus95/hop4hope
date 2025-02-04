@@ -59,7 +59,9 @@ const getPersonnageById = async (req, res) => {
             Id_personnage: personnage.Id_personnage,
             Nom: personnage.Nom,
             coût: personnage.coût,
-            matrice: hexArray // ✅ Now returned in hex format
+            matrice: hexArray, // ✅ Now returned in hex format
+            image: personnage.image,
+            activeAnimationId: personnage.activeAnimationId
         });
     } catch (error) {
         res.status(500).json({ error: "Error retrieving character" });
