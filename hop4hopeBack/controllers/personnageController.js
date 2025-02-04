@@ -11,7 +11,8 @@ const getAllPersonnages = async (req, res) => {
             coût: p.coût,
             matrice: p.matrice 
                 ? p.matrice.match(/.{1,2}/g).map(byte => "0x" + byte.toUpperCase()) 
-                : []
+                : [],
+            image: p.image
         }));
 
         res.json(formattedPersonnages);
