@@ -1,5 +1,6 @@
 const express = require('express');
 const { getAnimationsByPersonnage, setActiveAnimation } = require('../controllers/animationController');
+const authenticateUser = require('../middleware/authMiddleware');
 
 const router = express.Router();
 

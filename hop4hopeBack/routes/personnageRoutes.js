@@ -1,5 +1,6 @@
 const express = require('express');
 const { getAllPersonnages, createPersonnage, getPersonnageById, setActivePersonnage, getUserActivePersonnage } = require('../controllers/personnageController');
+const authenticateUser = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
