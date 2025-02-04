@@ -11,40 +11,50 @@ import ShopScreen from './src/screens/ShopScreen';
 import CreateAccountScreen from './src/screens/CreateAccountScreen';
 import BluetoothScreen from './src/screens/BluetoothScreen';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useFonts } from 'expo-font';
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function MainTabs() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="MyDevice" component={MyDeviceScreen} />
-      <Tab.Screen name="Quests" component={QuestsScreen} />
-      <Tab.Screen name="Wardrobe" component={WardrobeScreen} />
-      <Tab.Screen name="Dance" component={DanceScreen} />
-      <Tab.Screen name="Bluetooth" component={BluetoothScreen} />
-    </Tab.Navigator>
-  );
-}
-export type RootStackParamList = {
-  Login: undefined;
-  CreateAccount: undefined;
-  // Ajoute d'autres routes ici si besoin
-};
-
-
 const MainApp = () => (
   <Tab.Navigator>
-    <Tab.Screen name="MyDevice" component={BluetoothScreen} />
-    <Tab.Screen name="Quests" component={QuestsScreen} />
-    <Tab.Screen name="Wardrobe" component={WardrobeScreen} />
-    <Tab.Screen name="Dance" component={DanceScreen} />
-    <Tab.Screen name="Shop" component={ShopScreen} />
+    <Tab.Screen 
+      name="MyDevice" 
+      component={BluetoothScreen}
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="bluetooth" size={size} color={color} /> }}
+    />
+    <Tab.Screen 
+      name="Quests" 
+      component={QuestsScreen}
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="list-alt" size={size} color={color} /> }}
+    />
+    <Tab.Screen 
+      name="Wardrobe" 
+      component={WardrobeScreen}
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="users" size={size} color={color} /> }}
+    />
+    <Tab.Screen 
+      name="Dance" 
+      component={DanceScreen}
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="music" size={size} color={color} /> }}
+    />
+    <Tab.Screen 
+      name="Shop" 
+      component={ShopScreen}
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="shopping-bag" size={size} color={color} /> }}
+    />
   </Tab.Navigator>
 );
+
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // ✅ Load fonts inside the component
+  const [fontsLoaded] = useFonts({
+    'Gliker': require('./assets/fonts/Gliker-Black.ttf'),
+  });
 
   return (
     <NavigationContainer>
