@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Gliker',
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#6C63FF',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,

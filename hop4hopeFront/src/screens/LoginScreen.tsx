@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from "../../App";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useFonts } from 'expo-font';
 
 
 const REACT_NATIVE_SERVER_IP = Constants.expoConfig?.extra?.REACT_NATIVE_SERVER_IP;
@@ -18,11 +19,17 @@ interface LoginScreenProps {
   onLoginSuccess: () => void;
 }
 
+
+
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users`;
+
+  const [fontsLoaded] = useFonts({
+    'Gliker': require('../../assets/fonts/Gliker-Black.ttf'),
+  });
 
   const handleLogin = async () => {
     try {
@@ -54,6 +61,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Hop 4 Hope</Text>
+      <Text style={styles.subTitle}>Du sport et du fun !</Text>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Identifiant</Text>
         <TextInput
@@ -89,13 +98,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#E8F5E9", justifyContent: "center", alignItems: "center" },
+  title: { color: "#6C63FF", marginBottom: 10, fontSize: 35, alignItems: "center", padding: 20, fontFamily: 'Gliker' },
+  subTitle: { color: "#6C63FF", fontFamily: 'Gliker', marginBottom: 10, fontSize: 20, alignItems: "center"},
   formContainer: { width: "80%", backgroundColor: "white", padding: 20, borderRadius: 20, elevation: 5 },
-  label: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
+  label: { fontSize: 16, fontWeight: "bold", marginBottom: 5, fontFamily: 'Gliker' },
   input: { height: 40, borderWidth: 1, borderColor: "#ccc", borderRadius: 10, paddingHorizontal: 10, backgroundColor: "white", marginBottom: 15 },
   button: { backgroundColor: "#6C63FF", paddingVertical: 10, borderRadius: 10, alignItems: "center", marginTop: 10 },
-  buttonText: { color: "white", fontSize: 18, fontWeight: "bold" },
+  buttonText: { color: "white", fontSize: 18, fontWeight: "bold", fontFamily: 'Gliker' },
   footer: { flexDirection: "row", justifyContent: "space-between", marginTop: 15 },
-  link: { color: "#6C63FF", fontSize: 14 },
+  link: { color: "#6C63FF", fontSize: 10, fontFamily: 'Gliker' },
 });
 
 export default LoginScreen;

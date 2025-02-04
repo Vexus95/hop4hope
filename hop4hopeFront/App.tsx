@@ -85,6 +85,10 @@ export default function App() {
     'Gliker': require('./assets/fonts/Gliker-Black.ttf'),
   });
 
+  if (!fontsLoaded) {
+    return null; // Prevent rendering until fonts are loaded
+  }
+
   return (
     <NavigationContainer>
       {isLoggedIn ? (
