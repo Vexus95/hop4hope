@@ -9,20 +9,15 @@ const populateDatabase = async () => {
         // 🌟 Reset all tables (Optional: Use { force: true } to drop & recreate)
         await sequelize.sync({ alter: true });
 
-        // 🔹 Create Sample Users
+        // 🔹 Hash user passwords
         const hashedPassword = await bcrypt.hash("password123", 10);
-        const users = await Utilisateur.bulkCreate([
-            { Nom: "John", Prénom: "Doe", Email: "john@example.com", motdepasse: hashedPassword, points: 500 },
-            { Nom: "Jane", Prénom: "Smith", Email: "jane@example.com", motdepasse: hashedPassword, points: 800 }
-        ]);
-        console.log("✅ Users added.");
 
         // 🔹 Convert Hex Arrays to Hex Strings
         const hexArrayToString = (hexArray) => {
             return hexArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
         };
 
-        // 🔹 Sample Hex Arrays for Personnages and Animations
+        // 🔹 Sample Hex Matrices for Personnages
         const warriorMatrice = hexArrayToString([0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -55,51 +50,102 @@ const populateDatabase = async () => {
             0x38, 0xbe, 0x1f, 0x87, 0x03, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 
             0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 
             0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xaa]);
-        const mageMatrice = hexArrayToString([0x01, 0x03, 0x00, 0xac, 0xbb, 0x6b, 0x81, 0x88]);
+        const mageMatrice = hexArrayToString([0x01, 0x03, 0x00, 0xAC, 0xBB, 0x6B, 0x81, 0x88]);
+
+        // 🔹 Add Default Character Images
+        const warriorImage = "https://example.com/warrior.png"; 
+        const mageImage = "https://example.com/mage.png"; 
 
         // 🔹 Create Sample Characters
         const characters = await Personnage.bulkCreate([
-            { Nom: "Warrior", coût: 100, matrice: warriorMatrice },
-            { Nom: "Mage", coût: 200, matrice: mageMatrice }
+            { Nom: "Warrior", coût: 100, matrice: warriorMatrice, image: warriorImage },
+            { Nom: "Mage", coût: 200, matrice: mageMatrice, image: mageImage }
         ]);
         console.log("✅ Characters added.");
 
-        // 🔹 Sample Hex Arrays for Animations
-        const attackAnimation = hexArrayToString([0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80]);
-        const defendAnimation = hexArrayToString([0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, 0xFF]);
+        // Set default character as the first one (Warrior)
+        const defaultPersonnage = characters[0];
 
-        // 🔹 Create Sample Animations
+        // 🔹 Sample Hex Matrices for Animations
+        const attackMatrice = hexArrayToString([0x1F, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x9A]);
+        const defendMatrice = hexArrayToString([0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11, 0x22]);
+
+        // 🔹 Create Sample Animations (Linked to Characters)
         const animations = await Animation.bulkCreate([
-            { name: "Attack", matrice: attackAnimation, Id_personnage: characters[0].Id_personnage },
-            { name: "Defend", matrice: defendAnimation, Id_personnage: characters[1].Id_personnage }
+            { name: "Attack", matrice: attackMatrice, Id_personnage: defaultPersonnage.Id_personnage },
+            { name: "Defend", matrice: defendMatrice, Id_personnage: characters[1].Id_personnage }
         ]);
         console.log("✅ Animations added.");
 
-        // 🔹 Create Sample Quests
-        const quests = await Quete.bulkCreate([
-            { Nom: "First Steps", description: "Walk 100 steps", points: 50, date_debut: new Date(), date_fin: new Date(), defaultGoal: 100 },
-            { Nom: "Hero's Journey", description: "Win 5 battles", points: 150, date_debut: new Date(), date_fin: new Date(), defaultGoal: 5 }
+        // Set default animation for the default personnage
+        const defaultAnimation = animations[0];
+
+        // Assign default animation to the default personnage
+        await Personnage.update(
+            { activeAnimationId: defaultAnimation.Id_animation },
+            { where: { Id_personnage: defaultPersonnage.Id_personnage } }
+        );
+
+        // 🔹 Create Sample Users with Default Active Personnage
+        const users = await Utilisateur.bulkCreate([
+            { 
+                Nom: "John", Prénom: "Doe", Email: "john@example.com",
+                motdepasse: hashedPassword, points: 500, activePersonnageId: defaultPersonnage.Id_personnage
+            },
+            { 
+                Nom: "Jane", Prénom: "Smith", Email: "jane@example.com",
+                motdepasse: hashedPassword, points: 800, activePersonnageId: defaultPersonnage.Id_personnage
+            }
         ]);
-        console.log("✅ Quests added.");
+        console.log("✅ Users added with default active character.");
 
-        // 🔹 Assign a Quest to a User (Progress Tracking)
-        await Avoir.create({
-            Id_utilisateur: users[0].Id_utilisateur,
-            Id_quete: quests[0].Id_quete,
-            currentProgress: 20, // User has completed 20% of the quest
-            goal: quests[0].defaultGoal,
-            rewardClaimed: false
-        });
+        // 🔹 Assign Default Character to Each User
+        for (const user of users) {
+            await Possede.create({
+                Id_utilisateur: user.Id_utilisateur,
+                Id_personnage: defaultPersonnage.Id_personnage
+            });
+        }
 
-        console.log("✅ Quest progress assigned.");
+        console.log("✅ Default character assigned to users.");
 
-        // 🔹 Give User a Character
-        await Possede.create({
-            Id_utilisateur: users[0].Id_utilisateur,
-            Id_personnage: characters[0].Id_personnage
-        });
+        // 🔹 Define Daily and Weekly Quests
+        const quests = await Quete.bulkCreate([
+            { 
+                Nom: "Walk 500 Steps", 
+                description: "Walk 500 steps today", 
+                points: 50, 
+                date_debut: new Date(), 
+                date_fin: new Date(), 
+                defaultGoal: 500,
+                type: "daily" // ✅ Daily quest
+            },
+            { 
+                Nom: "Win 3 Battles", 
+                description: "Win 3 battles in a week", 
+                points: 200, 
+                date_debut: new Date(), 
+                date_fin: new Date(new Date().setDate(new Date().getDate() + 7)), // Ends in 7 days
+                defaultGoal: 3,
+                type: "weekly" // ✅ Weekly quest
+            }
+        ]);
+        console.log("✅ Daily and Weekly Quests added.");
 
-        console.log("✅ Characters assigned to users.");
+        // 🔹 Assign Daily and Weekly Quests to John (User 1)
+        const john = users[0];
+
+        for (const quest of quests) {
+            await Avoir.create({
+                Id_utilisateur: john.Id_utilisateur,
+                Id_quete: quest.Id_quete,
+                currentProgress: 0, 
+                goal: quest.defaultGoal,
+                rewardClaimed: false
+            });
+        }
+
+        console.log("✅ Daily and Weekly quests assigned to John.");
 
         console.log("🎉 Database populated successfully!");
         process.exit();
