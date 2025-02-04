@@ -1,4 +1,4 @@
-const { Personnage } = require('../models');
+const { Utilisateur, Personnage, Possede } = require('../models');
 
 const getAllPersonnages = async (req, res) => {
     try {
@@ -64,6 +64,55 @@ const getPersonnageById = async (req, res) => {
     }
 };
 
+const setActivePersonnage = async (req, res) => {
+    try {
+        const userId = req.user.id; // Extract from token
+        const { personnageId } = req.body;
+
+        // Verify the character exists and is owned by the user
+        const ownedCharacter = await Possede.findOne({
+            where: { Id_utilisateur: userId, Id_personnage: personnageId }
+        });
+
+        if (!ownedCharacter) {
+            return res.status(403).json({ error: "Character not owned by user" });
+        }
+
+        // Update active character for the user
+        await Utilisateur.update({ activePersonnageId: personnageId }, { where: { Id_utilisateur: userId } });
+
+        res.json({ message: "Active character updated successfully!" });
+    } catch (error) {
+        res.status(500).json({ error: "Error updating active character" });
+    }
+};
+
+const getUserActivePersonnage = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const user = await Utilisateur.findByPk(userId, {
+            include: [{ model: Personnage, as: "activePersonnage" }]
+        });
+
+        if (!user.activePersonnageId) {
+            return res.status(404).json({ error: "No active character set for user" });
+        }
+
+        res.json({
+            activePersonnage: {
+                Id_personnage: user.activePersonnage.Id_personnage,
+                Nom: user.activePersonnage.Nom,
+                coût: user.activePersonnage.coût,
+                matrice: user.activePersonnage.matrice,
+                activeAnimationId: user.activePersonnage.activeAnimationId
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error retrieving active character" });
+    }
+};
+
 
 // ✅ Corrected module.exports (Include all functions)
-module.exports = { getAllPersonnages, createPersonnage, getPersonnageById };
+module.exports = { getAllPersonnages, createPersonnage, getPersonnageById, setActivePersonnage, getUserActivePersonnage };
