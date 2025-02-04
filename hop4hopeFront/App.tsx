@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -43,11 +43,21 @@ const MainApp = () => (
 );
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
-      </Stack.Navigator>
+      {isLoggedIn ? (
+        <MainApp />
+      ) : (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login">
+            {(props) => <LoginScreen {...props} onLoginSuccess={() => setIsLoggedIn(true)} />}
+          </Stack.Screen>
+          <Stack.Screen name="CreateAccount" component={CreateAccountScreen} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }

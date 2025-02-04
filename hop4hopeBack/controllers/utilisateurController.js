@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Utilisateur, Personnage, Quete, Possede, Avoir } = require('../models');
+require('dotenv').config();
 
-const SECRET_KEY = "your_secret_key"; // Replace with an environment variable in production
+const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key";
 
 // Register a new user
 const registerUser = async (req, res) => {
@@ -89,4 +90,32 @@ const getUserQuests = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getUserCharacters, getUserQuests };
+// Get user information (Name, Surname, Email, Points)
+const getUserInfo = async (req, res) => {
+    try {
+        const userId = req.user.id; // Extracted from token
+
+        // Récupérer les informations de l'utilisateur
+        const user = await Utilisateur.findOne({
+            attributes: ['Nom', 'Prénom', 'Email', 'points'], // Sélectionner les champs nécessaires
+            where: { Id_utilisateur: userId }
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Répondre avec les informations de l'utilisateur
+        res.json({
+            Nom: user.Nom,
+            Prénom: user.Prénom,
+            Email: user.Email,
+            Points: user.points
+        });
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+        res.status(500).json({ error: "Error fetching user information" });
+    }
+};
+
+module.exports = { registerUser, loginUser, getUserCharacters, getUserQuests, getUserInfo };

@@ -5,7 +5,7 @@ const Personnage = sequelize.define('Personnage', {
     Id_personnage: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     Nom: { type: DataTypes.STRING(200), allowNull: false },
     coût: { type: DataTypes.INTEGER, allowNull: false },
-    matrice: { type: DataTypes.JSON, allowNull: false }, // Stockage de la matrice en JSON
+    matrice: { type: DataTypes.TEXT, allowNull: false } // ✅ Store as a HEX STRING
 }, { timestamps: false });
 
 module.exports = Personnage;
