@@ -55,7 +55,25 @@ const BluetoothImageSender = () => {
     };
   }, []);
 
-  const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/users`;
+  const API_URL = `http://${REACT_NATIVE_SERVER_IP}:5000/personnages`;
+  // const getActiveCharacter = async () => {
+  //   try {
+  //     const token = await AsyncStorage.getItem("userToken");
+  //     if (!token) {
+  //       throw new Error("Token non trouvé");
+  //     }
+
+  //     const response2 = await axios.get(`${API_URL2}/active`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     console.log("REPONSE DE LAPI :",response2);
+  //   } catch (error) {
+  //     console.error("Erreur lors de la récupération des données :", error);
+  //     throw error;
+  //   }
+  // };
+
   const getCharactersMatrice = async (): Promise<number[]> => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -63,11 +81,11 @@ const BluetoothImageSender = () => {
         throw new Error("Token non trouvé");
       }
 
-      const response = await axios.get(`${API_URL}/characters`, {
+      const response = await axios.get(`${API_URL}/active`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      const hexMatrice = response.data[0].matrice;
+      console.log(response);
+      const hexMatrice = response.data.matrice;
       const bitArray: number[] = [];
       for (let i = 0; i < hexMatrice.length; i += 2) {
         const byte = parseInt(hexMatrice.substr(i, 2), 16);
