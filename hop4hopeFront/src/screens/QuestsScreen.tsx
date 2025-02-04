@@ -204,9 +204,9 @@ const QuestsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f9ff', padding: 20 },
+  container: { flex: 1, backgroundColor: '#dbebff', padding: 20 },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginVertical: 10, color: '#333' },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginVertical: 10, color: '#333', fontFamily: 'Gliker' },
   questItem: {
     flexDirection: 'column', // Aligner les éléments verticalement
     backgroundColor: '#fff',
@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   claimedText: {
+    fontFamily: 'Gliker',
     marginTop: 10,
     fontSize: 14,
     color: "#777",
@@ -237,10 +238,11 @@ const styles = StyleSheet.create({
   refreshButton: {
     marginLeft: 10, // Espacement entre la box des points et le bouton
   },
-  questTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
-  questDescription: { fontSize: 14, color: '#777' },
-  points: { fontSize: 16, fontWeight: 'bold', color: '#5468ff' },
+  questTitle: { fontSize: 16, fontWeight: 'bold', color: '#333', fontFamily: 'Gliker' },
+  questDescription: { fontSize: 14, color: '#777', fontFamily: 'Gliker' },
+  points: { fontSize: 16, fontWeight: 'bold', color: '#5468ff', fontFamily: 'Gliker' },
   emptyMessage: {
+    fontFamily: 'Gliker',
     fontSize: 16,
     color: '#777',
     textAlign: 'center',

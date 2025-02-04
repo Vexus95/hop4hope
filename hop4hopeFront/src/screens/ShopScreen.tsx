@@ -79,7 +79,7 @@ const ShopScreen = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      Alert.alert("Achat réussi", `Vous avez acheté ${characterId} avec succès!`);
+      Alert.alert("Achat réussi", `Vous avez acheté le skin avec succès!`);
 
       setRefreshKey((prevKey) => prevKey + 1);
     } catch (error) {
@@ -132,7 +132,7 @@ const ShopScreen = () => {
                 <Card.Content>
                   <Title style={[styles.text, isOwned && styles.ownedText]}>{item.nom}</Title>
                   <Paragraph style={[styles.text, isOwned && styles.ownedText]}>
-                    {isOwned ? "Already possessed" : `Coût: ${item.coût} 🪙`}
+                    {isOwned ? "Personnage déjà possédé" : `Coût: ${item.coût} 🪙`}
                   </Paragraph>
                   <Image source={getImageSource(item.image)} style={styles.image} />
                 </Card.Content>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   container: { 
     flex: 1, 
-    backgroundColor: '#f4f9ff', 
+    backgroundColor: '#dbebff', 
     padding: 20 
   },
   card: {
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
   },
   ownedCard: {
-    backgroundColor: "#d3d3d3", // Grey background for owned characters
+    backgroundColor: "#A2A2A2", // Grey background for owned characters
   },
   loader: {
     flex: 1,
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Gliker',
     fontSize: 18,
+    color:"#0b1788"
   },
   image: {
     width: "100%",

@@ -89,8 +89,8 @@ const populateDatabase = async () => {
 
         // 🔹 Create Sample Characters
         const characters = await Personnage.bulkCreate([
-            { Nom: "Cow", coût: 100, matrice: cowMatrice, image: cowImage },
-            { Nom: "Bunny", coût: 200, matrice: bunnyMatrice, image: bunnyImage }
+            { Nom: "Vache", coût: 100, matrice: cowMatrice, image: cowImage },
+            { Nom: "Lapin", coût: 200, matrice: bunnyMatrice, image: bunnyImage }
         ]);
         console.log("✅ Characters added.");
 

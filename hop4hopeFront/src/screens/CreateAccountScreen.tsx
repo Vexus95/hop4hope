@@ -73,11 +73,11 @@ const CreateAccountScreen = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#E8F5E9", justifyContent: "center", alignItems: "center" },
   formContainer: { width: "80%", backgroundColor: "white", padding: 20, borderRadius: 20, elevation: 5 },
-  label: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
+  label: { fontSize: 16, fontWeight: "bold", marginBottom: 5, fontFamily: 'Gliker' },
   input: { height: 40, borderWidth: 1, borderColor: "#ccc", borderRadius: 10, paddingHorizontal: 10, backgroundColor: "white", marginBottom: 15 },
   button: { backgroundColor: "#6C63FF", paddingVertical: 10, borderRadius: 10, alignItems: "center", marginTop: 10 },
-  buttonText: { color: "white", fontSize: 18, fontWeight: "bold" },
-  link: { color: "#6C63FF", fontSize: 14, marginTop: 10, textAlign: "center" },
+  buttonText: { color: "white", fontSize: 18, fontWeight: "bold", fontFamily: 'Gliker' },
+  link: { color: "#6C63FF", fontSize: 12, marginTop: 10, textAlign: "center", fontFamily: 'Gliker' },
 });
 
 export default CreateAccountScreen;

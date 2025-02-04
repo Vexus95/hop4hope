@@ -20,30 +20,55 @@ const Stack = createStackNavigator();
 const MainApp = () => (
   <Tab.Navigator>
     <Tab.Screen 
-      name="MyDevice" 
+      name="Appareil" 
       component={BluetoothScreen}
-      options={{ tabBarIcon: ({ color, size }) => <Icon name="bluetooth" size={size} color={color} /> }}
-    />
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="bluetooth" size={size} color={color} />,
+      headerTitleStyle: { 
+        fontFamily: 'Gliker',
+        fontSize: 20,
+      }
+    }}
+  />
     <Tab.Screen 
-      name="Quests" 
+      name="Quêtes" 
       component={QuestsScreen}
-      options={{ tabBarIcon: ({ color, size }) => <Icon name="list-alt" size={size} color={color} /> }}
-    />
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="list-alt" size={size} color={color} />,
+      headerTitleStyle: { 
+        fontFamily: 'Gliker',
+        fontSize: 20,
+      }
+    }}
+  />
     <Tab.Screen 
-      name="Wardrobe" 
+      name="Inventaire" 
       component={WardrobeScreen}
-      options={{ tabBarIcon: ({ color, size }) => <Icon name="users" size={size} color={color} /> }}
-    />
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="users" size={size} color={color} />,
+      headerTitleStyle: { 
+        fontFamily: 'Gliker',
+        fontSize: 20,
+      }
+    }}
+  />
     <Tab.Screen 
-      name="Dance" 
+      name="Danse" 
       component={DanceScreen}
-      options={{ tabBarIcon: ({ color, size }) => <Icon name="music" size={size} color={color} /> }}
-    />
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="music" size={size} color={color} />,
+      headerTitleStyle: { 
+        fontFamily: 'Gliker',
+        fontSize: 20,
+      }
+    }}
+  />
     <Tab.Screen 
-      name="Shop" 
+      name="Boutique" 
       component={ShopScreen}
-      options={{ tabBarIcon: ({ color, size }) => <Icon name="shopping-bag" size={size} color={color} /> }}
-    />
+      options={{ tabBarIcon: ({ color, size }) => <Icon name="shopping-bag" size={size} color={color} />,
+      headerTitleStyle: { 
+        fontFamily: 'Gliker',
+        fontSize: 20,
+      }
+    }}
+  />
   </Tab.Navigator>
 );
 
@@ -55,6 +80,10 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     'Gliker': require('./assets/fonts/Gliker-Black.ttf'),
   });
+
+  if (!fontsLoaded) {
+    return null; // Prevent rendering until fonts are loaded
+  }
 
   return (
     <NavigationContainer>
