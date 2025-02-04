@@ -15,9 +15,9 @@ const MyDeviceScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>MyDevice</Text>
+      <Text style={styles.title}>Bracelet</Text>
       <TouchableOpacity style={styles.button} onPress={searchDevice}>
-        <Text style={styles.buttonText}>Chercher mon appareil</Text>
+        <Text style={styles.buttonText}>Chercher mon bracelet</Text>
       </TouchableOpacity>
       <Text style={styles.message}>{message}</Text>
     </View>
@@ -29,13 +29,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f4f9ff',
+    backgroundColor: '#dbebff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
+    fontFamily: 'Gliker',
   },
   button: {
     backgroundColor: '#007BFF',
@@ -44,11 +45,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonText: {
+    fontFamily: 'Gliker',
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
   message: {
+    fontFamily: 'Gliker',
     fontSize: 16,
     color: '#555',
   },

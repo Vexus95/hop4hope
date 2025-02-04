@@ -55,7 +55,7 @@ interface UserPointsProps {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#8babfe',
     padding: 10,
     borderRadius: 10,
     elevation: 5,
@@ -66,15 +66,16 @@ const styles = StyleSheet.create({
     width: '60%',  // Réduit la largeur de la box à 60%
   },
   pointsText: {
+    fontFamily: 'Gliker',
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#0b1788',
   },
   loader: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-  },
+  }
 });
 
 export default UserPoints;

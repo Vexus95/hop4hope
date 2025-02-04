@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
     marginVertical: 10
   },
   buttonText: {
+    fontFamily: 'Gliker',
     color: 'white',
     textAlign: 'center'
   }
