@@ -192,20 +192,21 @@ const BluetoothImageSender = () => {
       setStatus("Connectez un appareil d'abord");
       return;
     }
-
-    if (!matrice) {
-      setStatus("Matrice non récupérée");
-      return;
-    }
-
+  
     try {
-      const buffers = createSimpleImageBuffers(matrice);
-
+      const updatedMatrice = await getCharactersMatrice();
+      if (!updatedMatrice) {
+        setStatus("Matrice non récupérée");
+        return;
+      }
+  
+      const buffers = createSimpleImageBuffers(updatedMatrice);
+  
       for (const buffer of buffers) {
         await sendBuffer(buffer);
         await new Promise(resolve => setTimeout(resolve, 200));
       }
-
+  
       await sendBuffer(new Uint8Array([0x1C]));
       setStatus("Image envoyée");
     } catch (error) {
@@ -213,6 +214,7 @@ const BluetoothImageSender = () => {
       setStatus("Échec de l'envoi de l'image");
     }
   };
+  
 
   const sendCommand = async (command: number, value: number = 0) => {
     if (!connectedDevice) return;
@@ -232,26 +234,44 @@ const BluetoothImageSender = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.statusText}>{status}</Text>
-      
-      {!connectedDevice ? (
-        <TouchableOpacity style={styles.button} onPress={startScan}>
-          <Text style={styles.buttonText}>Scanner et se connecter</Text>
+    <Text style={styles.statusText}>{status}</Text>
+
+    {!connectedDevice ? (
+      <TouchableOpacity style={styles.button} onPress={startScan}>
+        <Text style={styles.buttonText}>Scanner et se connecter</Text>
+      </TouchableOpacity>
+    ) : (
+      <>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            try {
+              const mat = await getCharactersMatrice();
+              if (mat) {
+                sendImageToScreen();
+              }
+            } catch (error) {
+              console.error("Erreur lors de la mise à jour de l'image :", error);
+            }
+          }}
+        >
+          <Text style={styles.buttonText}>Mettre à jour et envoyer l'image</Text>
         </TouchableOpacity>
-        
-      ) : (
-        
-        <><TouchableOpacity style={styles.button} onPress={sendImageToScreen}>
-            <Text style={styles.buttonText}>Envoyer le personnage</Text>
-          </TouchableOpacity><TouchableOpacity onPress={() => sendCommand(0x1D, 100)} style={{ padding: 10, backgroundColor: 'orange', margin: 5 }}>
-              <Text style={{ color: 'white' }}>Changer contraste</Text>
-            </TouchableOpacity><TouchableOpacity onPress={() => sendCommand(0x1E, 1)} style={{ padding: 10, backgroundColor: 'purple', margin: 5 }}>
-              <Text style={{ color: 'white' }}>Allumer le rétroéclairage</Text>
-            </TouchableOpacity><TouchableOpacity onPress={() => sendCommand(0x1E, 0)} style={{ padding: 10, backgroundColor: 'black', margin: 5 }}>
-              <Text style={{ color: 'white' }}>Eteindre le rétroéclairage</Text>
-            </TouchableOpacity></>
-      )}
-    </View>
+
+        <TouchableOpacity onPress={() => sendCommand(0x1D, 100)} style={{ padding: 10, backgroundColor: 'orange', margin: 5 }}>
+          <Text style={{ color: 'white' }}>Changer contraste</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => sendCommand(0x1E, 1)} style={{ padding: 10, backgroundColor: 'purple', margin: 5 }}>
+          <Text style={{ color: 'white' }}>Allumer le rétroéclairage</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => sendCommand(0x1E, 0)} style={{ padding: 10, backgroundColor: 'black', margin: 5 }}>
+          <Text style={{ color: 'white' }}>Éteindre le rétroéclairage</Text>
+        </TouchableOpacity>
+      </>
+    )}
+  </View>
   );
 };
 
