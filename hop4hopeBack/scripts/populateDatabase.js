@@ -52,10 +52,14 @@ const populateDatabase = async () => {
             0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xaa]);
         const mageMatrice = hexArrayToString([0x01, 0x03, 0x00, 0xac, 0xbb, 0x6b, 0x81, 0x88]);
 
+        // 🔹 Add Default Character Images
+        const warriorImage = "https://example.com/warrior.png"; 
+        const mageImage = "https://example.com/mage.png"; 
+
         // 🔹 Create Sample Characters
         const characters = await Personnage.bulkCreate([
-            { Nom: "Warrior", coût: 100, matrice: warriorMatrice },
-            { Nom: "Mage", coût: 200, matrice: mageMatrice }
+            { Nom: "Warrior", coût: 100, matrice: warriorMatrice, image: warriorImage },
+            { Nom: "Mage", coût: 200, matrice: mageMatrice, image: mageImage }
         ]);
         console.log("✅ Characters added.");
 
